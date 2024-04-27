@@ -56,5 +56,5 @@ git clone https://github.com/yhotta240/youtube-quest.git
 3. `python api/run.py` を実行してアプリケーションを起動します。
 
 ## 参考
-https://developers.google.com/youtube/v3/docs?hl=ja
+https://developers.google.com/youtube/v3/docs?hl=ja<br>
 https://msiz07-flask-docs-ja.readthedocs.io/ja/latest/
