@@ -15,24 +15,21 @@
 注意: [Render.com](https://render.com/)の無料プランで公開しているため、開くまでに50秒以上かかる場合がありますので、ご了承ください。
 
 ### チュートリアル
-1. YouTube Data API v3のAPIキーを取得し、フォームにAPIキーを設定します。
-2. 調べたいチャンネルのチャンネルIDもしくはユーザーIDを取得し、フォームに貼り付けます。
+1. [YouTube Data API v3](https://console.cloud.google.com/apis/api/youtube.googleapis.com/)のAPIキーを取得し、フォームにAPIキーを設定します。
+2. [Youtube](https://www.youtube.com/)から調べたいチャンネルのチャンネルIDもしくはユーザーIDを取得し、フォームに貼り付けます。
 3. 詳細設定で表示したい項目と検索を絞り込める検索詳細設定が可能です。
 4. "Search" をクリックすると、該当チャンネルの情報と動画の情報を表示します。
 5. 任意でCSV形式でのダウンロードが可能です。
 
-<br><br>
+<br>
 
 ## ローカルでの使用方法
-### 必要なもの
-- Python 3.10
-- Flask
-- YouTube Data API v3のAPIキー
+
 ### プロジェクトを作成
 1. リポジトリをクローンします。
 ```bash
-mkdir youtube-insight
-cd youtube-insight
+mkdir youtube-quest
+cd youtube-quest
 ```
 
 2. 仮想環境を作成します。
@@ -58,3 +55,6 @@ git clone https://github.com/yhotta240/youtube-quest.git
 2. `api/route.py` のファイルを開き、`from .youtube_api ` を `from youtube_api` に、`from .download_csv` を `from download_csv` に変更します。
 3. `python api/run.py` を実行してアプリケーションを起動します。
 
+## 参考
+https://developers.google.com/youtube/v3/docs?hl=ja
+https://msiz07-flask-docs-ja.readthedocs.io/ja/latest/
