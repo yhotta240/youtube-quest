@@ -6,7 +6,7 @@
 
 <div align="center">
   <a href="https://youtube-quest.onrender.com/" target="_blank">
-    <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3680988/de85e431-b78d-f75e-a9f9-3edefd456a99.png" >
+    <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3680988/44c3ac08-c486-594e-5416-67c32f4261bd.png" >
   </a>
 </div>
 
