@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="jp" class="h-100">
+  <head>
+    {% include 'includes/head.html' %}
+    <title>Flask App</title>
+  </head>
+  <body class="h-100 d-flex flex-column justify-content-between">
+    {% include 'includes/header.html' %}
+
+    <div class="container">
+      <h1 class="ms-auto">Hello, World</h1>
+      <div class="row">
+        <div class="col-md-6">
+          <a href="/search">Search</a>
+        </div>
+        <div class="col-md-6">Right Column</div>
+      </div>
+    </div>
+    {% include 'includes/footer.html' %}
+  </body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+  {% include 'includes/head.html' %}
+  <title>Search Channel</title>
+  <link rel="stylesheet" href="../static/styles.css">
+</head>
+
+<body class="h-100">
+  {% include 'includes/header.html' %}
+  <div class="container d-flex flex-column justify-content-between h-100 p-3">
+    <div class="">
+      <!-- 検索フォーム -->
+      <div class="d-flex justify-content-center">
+        <form action="/" method="post" id="dynamic-form" class="mb-5 w-100 d-flex flex-column" style="max-width: 600px">
+          <!-- API -->
+          <div class="d-flex w-100 mb-3">
+            <label for="api_key" class="my-auto form-label m-2 text-nowrap text-end fw-bold" style="min-width: 150px">
+              <button type="button" id="helpButton" class="btn btn-link p-0" style="color: black">
+                Youtube API key
+              </button>
+              ：
+            </label>
+            <div class="input-group w-100">
+              <input type="password" id="api_key" name="api_key" class="form-control"
+                value="{{ request.form['api_key'] if request.method == 'POST' else '' }}" />
+              <button class="btn btn-secondary" type="button" id="clear_api_key_Btn">
+                ×
+              </button>
+            </div>
+          </div>
+          <!-- チャンネルID -->
+          <div class="d-flex w-100 mb-3">
+            <label for="search_type" class="my-auto form-label m-2 text-nowrap text-end fw-bold"
+              style="min-width: 150px">
+              <select class="form-select" id="search_type" name="search_type">
+                {% if search_type == "channel_id" %}
+                <option value="channel_id" selected>チャンネルID</option>
+                {% else %}
+                <option value="channel_id">チャンネルID</option>
+                {% endif %} {% if search_type == "channel_name" %}
+                <option value="channel_name" selected>チャンネル名</option>
+                {% else %}
+                <option value="channel_name">チャンネル名</option>
+                {% endif %} {% if search_type == "channel_url" %}
+                <option value="channel_url" selected>チャンネルURL</option>
+                {% else %}
+                <option value="channel_url">チャンネルURL</option>
+                {% endif %} {% if search_type == "user_id" %}
+                <option value="user_id" selected>ユーザーID</option>
+                {% else %}
+                <option value="user_id">ユーザーID</option>
+                {% endif %}
+              </select>
+            </label>
+            <div class="input-group w-100">
+              <input type="text" id="channel" name="channel" class="form-control"
+                value="{{ request.form['channel'] if request.method == 'POST' else '' }}" />
+              <button class="btn btn-secondary" type="button" id="clearBtn">
+                ×
+              </button>
+            </div>
+          </div>
+          <!-- 詳細設定 -->
+          <div class="text-end mb-2 ">
+            <p class="d-inline-flex gap-1 mb-2 ">
+              <a href="https://www.youtube.com/" type="button" class="btn btn-danger btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-youtube">
+                  <path
+                    d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z">
+                  </path>
+                  <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+                </svg>
+                YouTube
+              </a>
+            </p>
+            <p class="d-inline-flex gap-1 mb-2">
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse"
+                data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                ＋詳細設定
+              </button>
+            </p>
+            <div class="collapse text-start" id="collapseExample">
+              <div class="d-md-flex mb-3">
+                <!-- 表示設定 -->
+                <div class="card card-body pt-1 me-md-2 mb-md-0 mb-2 d-flex flex-column justify-content-between">
+                  <div>
+                    表示設定：<br />
+                    <!-- すべて -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_all" id="display_all"
+                        name="display_all" />
+                      <label for="display_all" class="form-check-label">
+                        すべて
+                      </label>
+                    </div>
+                    <!-- タイトル -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_title" id="display_title"
+                        name="display_title" {% if display_title %}checked{% endif %} />
+                      <label for="display_title" class="form-check-label">
+                        タイトル
+                      </label>
+                    </div>
+                    <!-- YouTube URL -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_youtube_url"
+                        id="display_youtube_url" name="display_youtube_url" {% if display_youtube_url %}checked{% endif
+                        %} />
+                      <label for="display_youtube_url" class="text-nowrap form-check-label">
+                        YouTube URL
+                      </label>
+                    </div>
+                    <!-- 動画 ID -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_youtube_id" id="display_youtube_id"
+                        name="display_youtube_id" {% if display_youtube_id %}checked{% endif %} />
+                      <label for="display_youtube_id" class="form-check-label">
+                        動画 ID
+                      </label>
+                    </div>
+                    <!-- 概要欄 -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_description"
+                        id="display_description" name="display_description" {% if display_description %}checked{% endif
+                        %} />
+                      <label for="display_description" class="form-check-label">
+                        概要欄
+                      </label>
+                    </div>
+                    <!-- 視聴回数 -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_views_counts"
+                        id="display_views_counts" name="display_views_counts" {% if display_views_counts %}checked{%
+                        endif %} />
+                      <label for="display_views_counts" class="form-check-label">
+                        視聴回数
+                      </label>
+                    </div>
+                    <!-- 投稿日 -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_publishedAt"
+                        id="display_publishedAt" name="display_publishedAt" {% if display_publishedAt %}checked{% endif
+                        %} />
+                      <label for="display_publishedAt" class="form-check-label">
+                        投稿日
+                      </label>
+                    </div>
+                    <!-- 高評価 -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_like_count" id="display_like_count"
+                        name="display_like_count" {% if display_like_count %}checked{% endif %} />
+                      <label for="display_like_count" class="form-check-label">
+                        高評価
+                      </label>
+                    </div>
+                    <!-- 低評価 -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_dislike_count"
+                        id="display_dislike_count" name="display_dislike_count" {% if display_dislike_count %}checked{%
+                        endif %} />
+                      <label for="display_dislike_count" class="form-check-label">
+                        低評価（非推奨）
+                      </label>
+                    </div>
+                    <!-- コメント数 -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_comment_count"
+                        id="display_comment_count" name="display_comment_count" {% if display_comment_count %}checked{%
+                        endif %} />
+                      <label for="display_comment_count" class="form-check-label">
+                        コメント数
+                      </label>
+                    </div>
+                    <!-- タグ -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_tags" id="display_tags"
+                        name="display_tags" {% if display_tags %}checked{% endif %} />
+                      <label for="display_tags" class="form-check-label">
+                        タグ
+                      </label>
+                    </div>
+                    <!-- カテゴリー -->
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" value="display_categoryId" id="display_categoryId"
+                        name="display_categoryId" {% if display_categoryId %}checked{% endif %} />
+                      <label for="display_categoryId" class="form-check-label">
+                        カテゴリー
+                      </label>
+                    </div>
+                  </div>
+                  <!-- デフォルト -->
+                  <div>
+                    <button type="button" class="btn btn-secondary btn-sm default_button">
+                      デフォルト
+                    </button>
+                  </div>
+                </div>
+                <!-- 検索条件設定 -->
+                <div class="card card-body pt-1">
+                  検索条件設定：<br />
+                  <table class="table table-sm">
+                    <!-- 検索範囲指定 -->
+                    <tr>
+                      <th>検索範囲</th>
+                      <td class="d-flex align-items-center">
+                        <input type="number" id="videos_count" name="videos_count" class="form-control w-50 mx-2"
+                          min="1" max="500" value="2" />
+                        <p class="my-auto">件の動画を取得</p>
+                      </td>
+                    </tr>
+                    <!-- 並び替え -->
+                    <tr>
+                      <th>並び替え</th>
+                      <td>
+                        <select class="form-select form-select-sm ms-2 w-50" aria-label="並び替え" name="order"
+                          value="{{ request.form['order'] if request.method == 'POST' else '' }}">
+                          <option value="date">新しい順</option>
+                          <option value="rating">高評価順</option>
+                          <option value="title">アルファベット順</option>
+                          <option value="videoCount">動画の数の多い順</option>
+                          <option value="viewCount">閲覧数の多い順</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <!-- コンテンツ -->
+                    <tr>
+                      <th>コンテンツ</th>
+                      <td>
+                        <select class="form-select form-select-sm ms-2 w-50" aria-label="コンテンツ" name="content_type"
+                          value="{{ request.form['content_type'] if request.method == 'POST' else '' }}">
+                          <option value="video">動画</option>
+                          <option value="short">ショート</option>
+                          <option value="live">ライブ配信</option>
+                          <option value="playlist">プレイリスト</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <!-- カテゴリー -->
+                    <tr>
+                      <th>カテゴリー</th>
+                      <td>
+                        <select class="form-select form-select-sm ms-2 w-50" aria-label="カテゴリ" name="category_id">
+                          <option value="all">すべて</option>
+                          <option value="1">映画とアニメ</option>
+                          <option value="2">自動車と乗り物</option>
+                          <option value="10">音楽</option>
+                          <option value="15">ペットと動物</option>
+                          <option value="17">スポーツ</option>
+                          <option value="19">旅行とイベント</option>
+                          <option value="20">ゲーム</option>
+                          <option value="22">ブログ</option>
+                          <option value="23">コメディー</option>
+                          <option value="24">エンターテイメント</option>
+                          <option value="25">ニュースと政治</option>
+                          <option value="26">ハウツーとスタイル</option>
+                          <option value="27">教育</option>
+                          <option value="28">科学と技術</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <!-- 動画時間 -->
+                    <!-- <tr>
+                      <th>動画時間</th>
+                      <td>
+                        <p class="ms-2 my-auto">最小</p>
+                        <input type="time" id="min_duration" name="min_duration" class="form-control w-50 mx-2"
+                          min="0" />
+                        <p class="ms-2 my-auto">最大</p>
+                        <input type="time" id="max_duration" name="max_duration" class="form-control w-50 mx-2"
+                          min="0" />
+                      </td>
+                    </tr> -->
+                    <!-- 再生回数 -->
+                    <!-- <tr>
+                      <th>再生回数</th>
+                      <td>
+                        <p class="ms-2 my-auto">最小</p>
+                        <div class="d-flex align-items-center">
+                          <input type="number" id="min_views" name="min_views" class="form-control w-50 mx-2 mb-1"
+                            min="0" />
+                          <p class="my-auto">回視聴</p>
+                        </div>
+                        <p class="ms-2 my-auto">最大</p>
+                        <div class="d-flex align-items-center">
+                          <input type="number" id="max_views" name="max_views" class="form-control w-50 mx-2" min="0" />
+                          <p class="my-auto">回視聴</p>
+                        </div>
+                      </td>
+                    </tr> -->
+                    <!-- CSVエンコード -->
+                    <tr>
+                      <th>CSVエンコード</th>
+                      <td>
+                        <select class="form-select form-select-sm ms-2 w-50" aria-label="CSVエンコード" name="encode">
+                          <option value="shift_jis" {% if request.method=='POST' and request.form['encode']=='shift_jis'
+                            %}selected{% endif %}>Shift_JIS</option>
+                          <option value="cp932" {% if request.method=='POST' and request.form['encode']=='cp932'
+                            %}selected{% endif %}>CP932</option>
+                          <option value="utf-8" {% if request.method=='POST' and request.form['encode']=='utf-8'
+                            %}selected{% endif %}>UTF-8</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                  <div>
+                    <button type="button" class="btn btn-secondary btn-sm">
+                      デフォルト
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 検索 -->
+          <button type="submit" value="Search" class="btn btn-primary w-100 mt-auto">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-search">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            Search
+          </button>
+        </form>
+      </div>
+
+      <div class="d-flex justify-content-end mb-2">
+        <!-- CSVファイル -->
+        <form action="/download_csv" method="post">
+          <button type="submit" class="btn btn-success btn-sm p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              class="feather feather-download">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            CSVファイルをダウンロード
+          </button>
+        </form>
+        <!-- 検索結果リセット -->
+        <form id="resetForm" class="ms-2">
+          <button type="button" id="resetBtn" class="btn btn-danger btn-sm p-2">
+            検索結果をリセットする
+          </button>
+        </form>
+      </div>
+
+      <!-- チャンネル情報 -->
+
+      <div class="d-flex mb-3">
+        {% if channel_data.title %}
+        <a href="https://www.youtube.com/{{channel_data.customUrl}}">
+          <img src="{{ channel_data.channel_icon }}" alt="icon" class="rounded-circle img-thumbnail"
+            style="width: 90px; height: 90px; object-fit: cover" />
+        </a>
+        {% else %}
+        <img src="#" alt="icon" class="rounded-circle img-thumbnail"
+          style="width: 90px; height: 90px; object-fit: cover" />
+        {% endif %}
+        <div class="ms-2 d-flex flex-column justify-content-md-center">
+          <div class="d-md-flex">
+            <div class="d-flex m-0">
+              {% if channel_data.title %}
+              <a href="https://www.youtube.com/{{channel_data.customUrl}}" style="color: black">
+                <h5 class="me-2 m-0 text-nowrap">{{channel_data.title}}</h5>
+              </a>
+              {% else %}
+              <h5 class="me-2 m-0 text-nowrap">チャンネル名</h5>
+              {% endif %}{% if channel_data.customUrl %}
+              <p class="me-2 m-0">{{channel_data.customUrl}}</p>
+              {% else %}
+              <p class="me-2 m-0">ユーザーID</p>
+              {% endif %}
+            </div>
+            {% if channel_data.channel_id %}
+            <p class="me-2 m-0">{{channel_data.channel_id}}</p>
+            {% else %}
+            <p class="me-2 m-0">チャンネルID</p>
+            {% endif %}
+          </div>
+          <div class="d-lg-flex">
+            <p class="me-2 m-0">
+              チャンネル登録者数: {{channel_data.subscriberCount}}人
+            </p>
+            <p class="me-2 m-0">
+              動画本数：{{channel_data.videoCount}}本の動画
+            </p>
+            <p class="me-2 m-0">
+              総再生回数: {{channel_data.viewCount}}回視聴
+            </p>
+            <p class="me-lg-2 m-0">{{channel_data.publishedAt}}に登録</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 検索結果 -->
+      <div class=" ">
+
+        <div class="overflow-x-scroll ">
+          <table class="table table-bordered text-nowrap ">
+            <thead>
+              <tr>
+                {% if display_title %}
+                <th>タイトル</th>
+                {% endif %} {% if display_youtube_url %}
+                <th>YouTube URL</th>
+                {% endif %} {% if display_youtube_id %}
+                <th>動画 ID</th>
+                {% endif %}{% if display_description %}
+                <th>概要欄</th>
+                {% endif %}{% if display_views_counts %}
+                <th>視聴回数</th>
+                {% endif %} {% if display_publishedAt %}
+                <th>投稿日</th>
+                {% endif %}{% if display_like_count %}
+                <th>高評価</th>
+                {% endif %}{% if display_dislike_count %}
+                <th>低評価</th>
+                {% endif %}{% if display_comment_count %}
+                <th>コメント数</th>
+                {% endif %}{% if display_tags %}
+                <th>タグ</th>
+                {% endif %}{% if display_categoryId %}
+                <th>カテゴリー</th>
+                {% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for video in videos %}
+              <tr>
+                {% if display_title %}
+                <td class="w-25">{{ video.title }}</td>
+                {% endif %} {% if display_youtube_url %}
+                <td>
+                  <a href="https://www.youtube.com/watch?v={{ video['id'] }}">{{ 'https://www.youtube.com/watch?v=' +
+                    video['id'] }}</a>
+                </td>
+                {% endif %} {% if display_youtube_id %}
+                <td>{{ video.id }}</td>
+                {% endif %} {% if display_description %}
+                <td>{{video.description}}</td>
+                {% endif %} {% if display_views_counts %}
+                <td>{{video.viewCount}}</td>
+                {% endif %}{% if display_publishedAt %}
+                <td>{{video.publishedAt}}</td>
+                {% endif %}{% if display_like_count %}
+                <td>{{video.likeCount}}</td>
+                {% endif %}{% if display_dislike_count %}
+                <td>{{video.dislikeCount}}</td>
+                {% endif %}{% if display_comment_count %}
+                <td>{{video.commentCount}}</td>
+                {% endif %}{% if display_tags %}
+                <td>{{ video.tags | join(', ') }}</td>
+                {% endif %}{% if display_categoryId %}
+                <td>{{video.categoryId}}</td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+    <script src="../static/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"></script>
+
+  </div>
+</body>
+
+</html>
