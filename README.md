@@ -12,7 +12,7 @@
 
 [クリックしてページを開く](https://youtube-quest.onrender.com/)
 
-注意: [Render.com](https://render.com/)の無料プランで公開しているため、開くまでに50秒以上かかる場合がありますので、ご了承ください。
+注意: [Render.com](https://render.com/)の無料プランで公開しているため、開くまでに50秒以上かかります。
 
 ### チュートリアル
 1. [YouTube Data API v3](https://console.cloud.google.com/apis/api/youtube.googleapis.com/)のAPIキーを取得し、フォームにAPIキーを設定します。
