@@ -22,8 +22,9 @@
               </button>
               ：
             </label>
+            <!-- type="password"  -->
             <div class="input-group w-100">
-              <input type="password" id="api_key" name="api_key" class="form-control"
+              <input id="api_key" name="api_key" class="form-control"
                 value="{{ request.form['api_key'] if request.method == 'POST' else '' }}" />
               <button class="btn btn-secondary" type="button" id="clear_api_key_Btn">
                 ×
@@ -194,9 +195,9 @@
                   </div>
                   <!-- デフォルト -->
                   <div>
-                    <button type="button" class="btn btn-secondary btn-sm default_button">
+                    <!-- <button type="button" class="btn btn-secondary btn-sm default_button">
                       デフォルト
-                    </button>
+                    </button> -->
                   </div>
                 </div>
                 <!-- 検索条件設定 -->
@@ -207,8 +208,8 @@
                     <tr>
                       <th>検索範囲</th>
                       <td class="d-flex align-items-center">
-                        <input type="number" id="videos_count" name="videos_count" class="form-control w-50 mx-2"
-                          min="1" max="500" value="2" />
+                        <input type="number" id="maxResults" name="maxResults" class="form-control w-50 mx-2" min="1"
+                          max="500" value="10" />
                         <p class="my-auto">件の動画を取得</p>
                       </td>
                     </tr>
@@ -296,20 +297,20 @@
                       <th>CSVエンコード</th>
                       <td>
                         <select class="form-select form-select-sm ms-2 w-50" aria-label="CSVエンコード" name="encode">
-                          <option value="shift_jis" {% if request.method=='POST' and request.form['encode']=='shift_jis'
-                            %}selected{% endif %}>Shift_JIS</option>
-                          <option value="cp932" {% if request.method=='POST' and request.form['encode']=='cp932'
-                            %}selected{% endif %}>CP932</option>
-                          <option value="utf-8" {% if request.method=='POST' and request.form['encode']=='utf-8'
-                            %}selected{% endif %}>UTF-8</option>
+                          <option value="shift_jis" {% if request.method=='POST' and request.form[ 'encode'
+                            ]=='shift_jis' %} selected {% endif %}>Shift_JIS</option>
+                          <option value="cp932" {% if request.method=='POST' and request.form[ 'encode' ]=='cp932' %}
+                            selected {% endif %}>CP932</option>
+                          <option value="utf-8" {% if request.method=='POST' and request.form[ 'encode' ]=='utf-8' %}
+                            selected {% endif %}>UTF-8</option>
                         </select>
                       </td>
                     </tr>
                   </table>
                   <div>
-                    <button type="button" class="btn btn-secondary btn-sm">
+                    <!-- <button type="button" class="btn btn-secondary btn-sm">
                       デフォルト
-                    </button>
+                    </button> -->
                   </div>
                 </div>
               </div>
@@ -330,7 +331,7 @@
 
       <div class="d-flex justify-content-end mb-2">
         <!-- CSVファイル -->
-        <form action="/download_csv" method="post">
+        <form action="/download_csv" method="post" id="downloadForm">
           <button type="submit" class="btn btn-success btn-sm p-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

@@ -1,12 +1,13 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+
 def youtube_api(api_key):
     if api_key:
         youtube = build("youtube", "v3", developerKey=api_key)
         return youtube
     else:
-        
+
         raise ValueError("APIキーが見つかりません")
 
 
@@ -18,7 +19,7 @@ def get_channel_search(
     if channel_name:
         channel_id = _get_channel_id_by_name(youtube, channel_name)
         return _get_channel_info(youtube, channel_id) if channel_id else {}
-    # チャンネルURLからチャンネルIDを取得する処理を追加する
+    
     if channel_url:
         pass
     if user_id:
@@ -47,8 +48,8 @@ def _get_channel_info(youtube, channel_id):
     channel_data = {}
     request = youtube.channels().list(part="snippet,statistics", id=channel_id)
     response = request.execute()
-    print("チャンネル情報")
-    print(response)
+    # print("チャンネル情報")
+    # print(response)
     if "items" in response and response["items"]:
         channel = response["items"][0]
         channel_data["channel_icon"] = channel["snippet"]["thumbnails"]["default"][
@@ -63,7 +64,7 @@ def _get_channel_info(youtube, channel_id):
 def get_channel_info(
     youtube,
     channel_id,
-    videos_count,
+    maxResults,
     order,
     content_type,
     category_id,
@@ -72,72 +73,67 @@ def get_channel_info(
     min_views,
     max_views,
 ):
-
     videos = []
+    nextPageToken = None
 
     try:
-        # チャンネルから最新の動画を取得
-        request = (
-            youtube.search()
-            .list(
-                part="snippet",  # snippetとstatisticsの両方を取得する
-                channelId=channel_id,
-                maxResults=videos_count,
-                type=content_type,
-                videoCategoryId=category_id,
-                order=order,
-                # publishedAfter=min_duration,
-                # publishedBefore=max_duration,
-            )
-            .execute()
-        )
-        print("チャンネルの動画")
-        print(request)
-        # 取得した動画のURLをリストに追加
-        for item in request["items"]:
-            # print(item)
-            if item["id"]["kind"] == "youtube#video":
-                video_info = {}
-                video_info["title"] = item["snippet"]["title"]
-                video_info["id"] = item["id"]["videoId"]
-                video_info["description"] = item["snippet"]["description"]
-                video_info["publishedAt"] = item["snippet"]["publishedAt"]
-
-                # 動画の詳細な情報を取得
-                video_details_request = (
-                    youtube.videos()
-                    .list(
-                        part="statistics, snippet",
-                        id=video_info["id"],
-                    )
-                    .execute()
+        while True:
+            # チャンネルから最新の動画を取得
+            request = (
+                youtube.search()
+                .list(
+                    part="snippet",  # snippetとstatisticsの両方を取得する
+                    channelId=channel_id,
+                    maxResults=min(int(maxResults), 50),  # 一度に取得する最大数を制限
+                    type=content_type,
+                    videoCategoryId=category_id,
+                    order=order,
+                    pageToken=nextPageToken,
+                    # publishedAfter=min_duration,
+                    # publishedBefore=max_duration,
                 )
-                print("video_details_request")
-                print(video_details_request)
-                # 応答から動画の詳細な情報を取り出し、video_info に結合
-                if "items" in video_details_request:
-                    if 'tags' in video_details_request["items"][0]["snippet"]:
-                        tags = video_details_request["items"][0]['snippet']['tags']
-                        print(tags)
-                        video_info['tags'] = tags
-                    else:
-                        print("Tags not found")
-                    if 'categoryId' in video_details_request["items"][0]["snippet"]:
-                        categoryId = video_details_request["items"][0]["snippet"]["categoryId"]
-                        print(categoryId)
-                        video_info['categoryId'] = categoryId
-                    else:
-                        print("categoryId not found")
-                    video_statistics = video_details_request["items"][0]["statistics"]
-                    video_info.update(video_statistics)
-                videos.append(video_info)
-                print("結果")
-                print(videos)
+                .execute()
+            )
+            # 取得した動画のURLをリストに追加
+            for item in request["items"]:
+                if item["id"]["kind"] == "youtube#video":
+                    video_info = {}
+                    video_info["title"] = item["snippet"]["title"]
+                    video_info["id"] = item["id"]["videoId"]
+                    video_info["description"] = item["snippet"]["description"]
+                    video_info["publishedAt"] = item["snippet"]["publishedAt"]
+
+                    # 動画の詳細な情報を取得
+                    video_details_request = (
+                        youtube.videos()
+                        .list(
+                            part="snippet, statistics",
+                            id=video_info["id"],
+                        )
+                        .execute()
+                    )
+
+                    # カテゴリIDとタグを追加
+                    if "items" in video_details_request:
+                        video_snippet = video_details_request["items"][0]["snippet"]
+                        video_info["categoryId"] = video_snippet.get("categoryId")
+                        video_info["tags"] = video_snippet.get("tags", [])
+                        video_statistics = video_details_request["items"][0][
+                            "statistics"
+                        ]
+                        video_info.update(video_statistics)
+                    videos.append(video_info)
+
+            # 次のページがあるかチェック
+            nextPageToken = request.get("nextPageToken")
+            if not nextPageToken or len(videos) >= maxResults:
+                break  # 次のページがないか、指定された数の動画を取得した場合はループを終了
+
+            # 指定された数の動画を取得した場合はループを終了
+            if len(videos) >= maxResults:
+                break
 
     except HttpError as e:
         print(f"An HTTP error {e.resp.status} occurred: {e.content}")
 
     return videos
-
-
-

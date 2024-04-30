@@ -64,6 +64,12 @@ def convert_to_csv(videos, display_settings, csv_encode):
         # CSV に行を書き込む
         writer.writerow(row)
 
-    # バッファからCSVデータを取得して返す
-    csv_data = csv_buffer.getvalue().encode(csv_encode) 
+     # バッファからCSVデータを取得して返す
+    try:
+        csv_data = csv_buffer.getvalue().encode(csv_encode)
+    except UnicodeEncodeError:
+        # エンコードエラーが発生した場合、バッファのエンコードエラーを無視する
+        csv_buffer.seek(0)
+        csv_data = csv_buffer.read().encode(errors='ignore')
+
     return csv_data

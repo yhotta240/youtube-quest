@@ -47,7 +47,6 @@ document.getElementById('dynamic-form').addEventListener('submit', function (eve
   }
 });
 
-
 // APIのクリアボタンをクリックしたときに、入力フォームをクリアする
 document
   .getElementById("clear_api_key_Btn")
@@ -66,6 +65,35 @@ document.getElementById("resetBtn").addEventListener("click", () => {
     // フォームの送信
     const videoList = document.getElementById("video-list");
     videoList.innerHTML = "";
+  }
+});
+
+// フォームが送信されたときの処理
+document.getElementById("downloadForm").addEventListener("submit", async function(event) {
+  event.preventDefault(); // フォームのデフォルトの動作を停止
+
+  // フォームの送信
+  let response = await fetch("/download_csv", {
+    method: "POST",
+  });
+
+  // レスポンスのステータスコードを確認
+  if (response.ok) {
+    // ダウンロード成功
+    response.blob().then(blob => {
+      // Content-Dispositionヘッダーからファイル名を取得
+      let filename = response.headers.get("Content-Disposition").split("filename=")[1];
+      let url = window.URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  } else {
+    // ダウンロード失敗
+    alert("CSVファイルのダウンロードに失敗しました。");
   }
 });
 
