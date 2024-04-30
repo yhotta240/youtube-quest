@@ -40,7 +40,8 @@
                 <option value="channel_id" selected>チャンネルID</option>
                 {% else %}
                 <option value="channel_id">チャンネルID</option>
-                {% endif %} {% if search_type == "channel_name" %}
+                {% endif %} 
+                <!-- {% if search_type == "channel_name" %}
                 <option value="channel_name" selected>チャンネル名</option>
                 {% else %}
                 <option value="channel_name">チャンネル名</option>
@@ -48,7 +49,8 @@
                 <option value="channel_url" selected>チャンネルURL</option>
                 {% else %}
                 <option value="channel_url">チャンネルURL</option>
-                {% endif %} {% if search_type == "user_id" %}
+                {% endif %}  -->
+                {% if search_type == "user_id" %}
                 <option value="user_id" selected>ユーザーID</option>
                 {% else %}
                 <option value="user_id">ユーザーID</option>
@@ -407,6 +409,7 @@
           <table class="table table-bordered text-nowrap ">
             <thead>
               <tr>
+                <th></th>
                 {% if display_title %}
                 <th>タイトル</th>
                 {% endif %} {% if display_youtube_url %}
@@ -435,6 +438,7 @@
             <tbody>
               {% for video in videos %}
               <tr>
+                <td class="w-25">{{ video.count }}</td>
                 {% if display_title %}
                 <td class="w-25">{{ video.title }}</td>
                 {% endif %} {% if display_youtube_url %}
