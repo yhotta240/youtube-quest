@@ -75,7 +75,7 @@ def get_channel_info(
 ):
     videos = []
     nextPageToken = None
-
+    count = 1  
     try:
         while True:
             # チャンネルから最新の動画を取得
@@ -96,8 +96,10 @@ def get_channel_info(
             )
             # 取得した動画のURLをリストに追加
             for item in request["items"]:
+                
                 if item["id"]["kind"] == "youtube#video":
                     video_info = {}
+                    video_info["count"] = count 
                     video_info["title"] = item["snippet"]["title"]
                     video_info["id"] = item["id"]["videoId"]
                     video_info["description"] = item["snippet"]["description"]
@@ -115,6 +117,7 @@ def get_channel_info(
 
                     # カテゴリIDとタグを追加
                     if "items" in video_details_request:
+                        
                         video_snippet = video_details_request["items"][0]["snippet"]
                         video_info["categoryId"] = video_snippet.get("categoryId")
                         video_info["tags"] = video_snippet.get("tags", [])
@@ -123,6 +126,7 @@ def get_channel_info(
                         ]
                         video_info.update(video_statistics)
                     videos.append(video_info)
+                    count += 1  
 
             # 次のページがあるかチェック
             nextPageToken = request.get("nextPageToken")

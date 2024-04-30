@@ -407,6 +407,7 @@
           <table class="table table-bordered text-nowrap ">
             <thead>
               <tr>
+                <th></th>
                 {% if display_title %}
                 <th>タイトル</th>
                 {% endif %} {% if display_youtube_url %}
@@ -435,6 +436,7 @@
             <tbody>
               {% for video in videos %}
               <tr>
+                <td class="w-25">{{ video.count }}</td>
                 {% if display_title %}
                 <td class="w-25">{{ video.title }}</td>
                 {% endif %} {% if display_youtube_url %}
