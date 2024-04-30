@@ -50,7 +50,7 @@ pip install google-api-python-client
 git clone https://github.com/yhotta240/youtube-quest.git
 ```
 
-### 使用方法
+### 起動方法
 1. `api/run.py` のファイルを開き、`from .route import app` を `from route import app` に変更します。
 2. `api/route.py` のファイルを開き、`from .youtube_api ` を `from youtube_api` に、`from .download_csv` を `from download_csv` に変更します。
 3. `python api/run.py` を実行してアプリケーションを起動します。
