@@ -58,15 +58,6 @@ document.getElementById("clearBtn").addEventListener("click", () => {
   document.getElementById("channel").value = "";
 });
 
-// リセットボタンがクリックされたときの処理
-document.getElementById("resetBtn").addEventListener("click", () => {
-  // 確認ダイアログを表示
-  if (confirm("検索結果をリセットしますか？")) {
-    // フォームの送信
-    const videoList = document.getElementById("video-list");
-    videoList.innerHTML = "";
-  }
-});
 
 // フォームが送信されたときの処理
 document.getElementById("downloadForm").addEventListener("submit", async function(event) {

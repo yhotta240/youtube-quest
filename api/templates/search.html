@@ -345,12 +345,6 @@
             CSVファイルをダウンロード
           </button>
         </form>
-        <!-- 検索結果リセット -->
-        <form id="resetForm" class="ms-2">
-          <button type="button" id="resetBtn" class="btn btn-danger btn-sm p-2">
-            検索結果をリセットする
-          </button>
-        </form>
       </div>
 
       <!-- チャンネル情報 -->
@@ -435,7 +429,7 @@
                 {% endif %}
               </tr>
             </thead>
-            <tbody>
+            <tbody id="videoResults">
               {% for video in videos %}
               <tr>
                 <td class="w-25">{{ video.count }}</td>
