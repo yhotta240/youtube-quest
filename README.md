@@ -24,31 +24,43 @@
 <br>
 
 ## ローカルでの使用方法
+https://github.com/yhotta240/youtube-quest
 
 ### プロジェクトを作成
-1. リポジトリをクローンします。
-```bash
-mkdir youtube-quest
+1.リポジトリをクローンします。
+```powershell:Windows
+git clone https://github.com/yhotta240/youtube-quest.git
 cd youtube-quest
+code . 
 ```
 
-2. 仮想環境を作成します。
-```bash
+2.仮想環境を作成します。
+```powershell:Windows
 py -3 -m venv .venv
 .venv\Scripts\activate
 ```
 
 ### インストール
-1. 必要なライブラリをインストールします。
-```bash
+必要なライブラリをインストールします。
+
+```powershell:Windows
 pip install Flask
 pip install google-api-python-client
 ```
-
-2. リポジトリをクローンします。
-```bash
-git clone https://github.com/yhotta240/youtube-quest.git
+もしくはrequirementsを使って一括インストール
+```powershell:Windows
+pip install -r requirements.txt
 ```
+### 起動方法
+1.`python fix_imports.py` を実行し、ローカル用のimportに修正します。
+```powershell:Windows
+python fix_imports.py
+```
+2.`python api/run.py` を実行してアプリケーションを起動します。
+```powershell:Windows
+python api/run.py
+```
+<br>
 
 ### 起動方法
 1. `api/run.py` のファイルを開き、`from .route import app` を `from route import app` に変更します。
