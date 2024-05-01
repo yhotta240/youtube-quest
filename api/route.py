@@ -1,8 +1,8 @@
 import os
 import copy
 from flask import Flask, render_template, request, Response, session
-from .youtube_api import youtube_api, get_channel_search, get_channel_info
-from .download_csv import convert_to_csv
+from youtube_api import youtube_api, get_channel_search, get_channel_info
+from download_csv import convert_to_csv
 from datetime import datetime
 
 app = Flask(__name__)
